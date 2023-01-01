@@ -7,16 +7,14 @@
   <!-- 主内容区 -->
   <div v-if="data.isStart" class="chessBoard">
     <div v-show="data.gameStatus > 0" class="mainBoard">
-      <div>
         <template v-for="block in data.levelBlocksVal">
           <div v-if="block.status === 0" class="chessBoardItem float"
-            :class="{ disabled: block.higherThanBlock.length > 0 }" :data-id="block.id"
+            :class="{ disabled: block.higherThanBlock.length > 0 }"
             :style="{ zIndex: block.level, left: block.x * 22 + 'px', top: block.y * 22 + 'px', }"
             @click="clickHandler(block)">
             {{ block.type }}
           </div>
         </template>
-      </div>
     </div>
 
     <!-- 随机选块区 -->
@@ -182,7 +180,6 @@ function initBlockConnection(mapBlocks, randomBlockNum, totalBlockNum) {
     for (let j = 0; j < 8; j++) {
       randomBlocks[i].push(mapBlocks[curBlock]);
       curBlock++;
-      console.log(randomBlocks);
     };
   }
 
@@ -359,6 +356,7 @@ const startHandler = () => {
   top: 80%;
   transform: translate(-50%, 0);
   pointer-events: none;
+  
 }
 
 .slotBoardItem {
@@ -368,8 +366,12 @@ const startHandler = () => {
   width: 42px;
   height: 42px;
   line-height: 42px;
+  border: 1px solid #eee;
   background: white;
   text-align: center;
-  border: 1px solid saddlebrown;
+  opacity: 1;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0px 3px 0 0 #fff, 0 8px 0 0 #ddd, 0 8px 0 2px #333, 0 0 0 2px #333;
 }
 </style>

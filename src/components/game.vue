@@ -286,7 +286,6 @@ const clickHandler = (block, randomIdx) => {
 };
 
 const startHandler = () => {
-  console.log('走了');
   // 第一次开始才进行判断
   if (data.startNum===1) {
     data.isStart = !data.isStart;

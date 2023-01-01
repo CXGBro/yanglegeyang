@@ -1,5 +1,5 @@
 <template>
-  <div @click="startHandler" v-if="!data.isStart" class="startGame">开始游戏</div>
+  <div @click="startHandler" class="startGame">{{data.isStart?"重新开始":"开始"}}游戏</div>
   <!-- 胜利 -->
   <div v-if="data.gameStatus === 3" style="text-align: center">
     <h2>恭喜，你赢啦！🎉</h2>
@@ -7,25 +7,25 @@
   <!-- 主内容区 -->
   <div v-if="data.isStart" class="chessBoard">
     <div v-show="data.gameStatus > 0" class="mainBoard">
-        <template v-for="block in data.levelBlocksVal">
-          <div v-if="block.status === 0" class="chessBoardItem float"
-            :class="{ disabled: block.higherThanBlock.length > 0 }"
-            :style="{ zIndex: block.level, left: block.x * 22 + 'px', top: block.y * 22 + 'px', }"
-            @click="clickHandler(block)">
-            {{ block.type }}
-          </div>
-        </template>
+      <template v-for="block in data.levelBlocksVal">
+        <div v-if="block.status === 0" class="chessBoardItem float"
+          :class="{ disabled: block.higherThanBlock.length > 0 }"
+          :style="{ zIndex: block.level, left: block.x * 22 + 'px', top: block.y * 22 + 'px', }"
+          @click="clickHandler(block)">
+          {{ block.type }}
+        </div>
+      </template>
     </div>
 
     <!-- 随机选块区 -->
     <div class="randomBoard">
       <div v-for="randomBlock, index in data.randomBlocksVal">
-        <span v-if="randomBlock.length > 0" class="chessBoardItem" @click="clickHandler(randomBlock[0],index)">
+        <span v-if="randomBlock.length > 0" class="chessBoardItem" @click="clickHandler(randomBlock[0], index)">
           {{ randomBlock[0].type }}
         </span>
         <!-- 隐藏的面板 -->
         <span v-for="num in Math.max(randomBlock.length - 1, 0)" :key="num" class="chessBoardItem disabled">
-            {{ randomBlock[num].type }}
+          {{ randomBlock[num].type }}
         </span>
       </div>
     </div>
@@ -53,7 +53,9 @@ const data = reactive({
   slotAreaVal: '',
   gameStatus: 0,
   slotBlockNum: 0,
-  isStart: false
+  isStart: false,
+  // 点击开始按钮的次数
+  startNum:1
 })
 
 let mapBoard = []
@@ -229,7 +231,7 @@ function initGame() {
 // 点击事件
 const clickHandler = (block, randomIdx) => {
   // 如果点击的是随机区的方块
-  if (randomIdx>=0) {
+  if (randomIdx >= 0) {
     // 移除所点击的随机区域的第一个元素
     data.randomBlocksVal[randomIdx].shift()
   } else {
@@ -284,7 +286,12 @@ const clickHandler = (block, randomIdx) => {
 };
 
 const startHandler = () => {
-  data.isStart = !data.isStart
+  console.log('走了');
+  // 第一次开始才进行判断
+  if (data.startNum===1) {
+    data.isStart = !data.isStart;
+  }
+  data.startNum += 1;
   initMap(mapWidth, mapHeight);
   data.gameStatus = 0;
   const { levelBlocksArr, randomBlocks, slotArea } = initGame();
@@ -297,16 +304,18 @@ const startHandler = () => {
 
 <style scoped>
 .startGame {
-  width: 80px;
+  width: fit-content;
   margin: 0 auto;
+  margin-bottom: 20px;
   cursor: pointer;
   background: #fff;
-  border: 4px solid green;
+  border: 4px solid;
 }
 
 .float {
   position: absolute;
 }
+
 .mainBoard {
   position: relative;
   width: 360px;
@@ -356,7 +365,7 @@ const startHandler = () => {
   top: 80%;
   transform: translate(-50%, 0);
   pointer-events: none;
-  
+
 }
 
 .slotBoardItem {
